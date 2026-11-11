@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Data (Part 1) — 70-Question Deep Conceptual Exam Lab</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-hover: #263449;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-dark: #0284c7;
+      --green-bg: rgba(16, 185, 129, 0.16);
+      --green-border: #10b981;
+      --green-text: #6ee7b7;
+      --red-bg: rgba(239, 68, 68, 0.16);
+      --red-border: #ef4444;
+      --red-text: #fca5a5;
+      --badge-bg: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-area h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .title-area p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stat-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .stat-pill.correct {
+      border-color: var(--green-border);
+      color: var(--green-text);
+    }
+
+    .stat-pill.wrong {
+      border-color: var(--red-border);
+      color: var(--red-text);
+    }
+
+    .btn {
+      background: var(--accent-dark);
+      color: #fff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: transparent;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .controls {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .chip {
+      background: var(--bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .chip.active, .chip:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .q-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .q-card.answered-correct {
+      border-left: 5px solid var(--green-border);
+    }
+
+    .q-card.answered-wrong {
+      border-left: 5px solid var(--red-border);
+    }
+
+    .q-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: var(--badge-bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+
+    .badge.slide {
+      color: #fbbf24;
+      border-color: rgba(251, 191, 36, 0.35);
+    }
+
+    .badge.type {
+      color: #c084fc;
+      border-color: rgba(192, 132, 252, 0.35);
+    }
+
+    .q-text {
+      font-size: 1.04rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #f1f5f9;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opt-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 0.94rem;
+      line-height: 1.5;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      background: var(--card-hover);
+      border-color: var(--accent);
+    }
+
+    .opt-btn:disabled {
+      cursor: default;
+    }
+
+    .opt-letter {
+      min-width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .opt-btn.correct-choice {
+      background: var(--green-bg) !important;
+      border-color: var(--green-border) !important;
+      color: #ecfdf5 !important;
+    }
+
+    .opt-btn.correct-choice .opt-letter {
+      background: var(--green-border);
+      border-color: var(--green-border);
+      color: #064e3b;
+    }
+
+    .opt-btn.wrong-choice {
+      background: var(--red-bg) !important;
+      border-color: var(--red-border) !important;
+      color: #fef2f2 !important;
+    }
+
+    .opt-btn.wrong-choice .opt-letter {
+      background: var(--red-border);
+      border-color: var(--red-border);
+      color: #fff;
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 15px 18px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      display: none;
+    }
+
+    .explanation-box.visible {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 0.86rem;
+    }
+
+    .exp-header.pass {
+      color: var(--green-text);
+    }
+
+    .exp-header.fail {
+      color: var(--red-text);
+    }
+
+    .retry-mini {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .retry-mini:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="title-area">
+        <h1>Big Data (Part 1) — Deep Conceptual Exam Lab</h1>
+        <p>70 Analytical & Scenario-Based Questions • Covers All 45 Slides • Instant Feedback</p>
+      </div>
+      <div class="stats-bar">
+        <span class="stat-pill" id="stat-progress">Answered: 0 / 70</span>
+        <span class="stat-pill correct" id="stat-correct">Correct: 0</span>
+        <span class="stat-pill wrong" id="stat-wrong">Wrong: 0</span>
+        <span class="stat-pill" id="stat-score">Score: 0%</span>
+        <button class="btn btn-outline" onclick="resetAll()">Reset Lab</button>
+        <button class="btn" onclick="downloadHTML()">Download HTML</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="controls">
+      <input type="text" id="searchBox" class="search-input" placeholder="Search questions, concepts, case studies (e.g., Veracity, Hurricane Michael, NameNode, Shuffle, local[4])..." oninput="renderQuestions()" />
+      <div class="filter-row" id="topicFilters">
+        <span class="filter-label">Topic:</span>
+        <button class="chip active" onclick="setTopic('ALL', this)">All 70 Questions</button>
+        <button class="chip" onclick="setTopic('Core & Data Types', this)">Core & Data Types (Slides 1–7)</button>
+        <button class="chip" onclick="setTopic('The 5 Vs', this)">The 5 V's (Slides 8–9)</button>
+        <button class="chip" onclick="setTopic('Case 1: Google Maps', this)">Google Maps (Slides 10–16)</button>
+        <button class="chip" onclick="setTopic('Case 2: Hurricane Michael', this)">Hurricane Michael (Slides 17–21)</button>
+        <button class="chip" onclick="setTopic('Lifecycle, Challenges & Systems', this)">Lifecycle & Systems (Slides 22–26)</button>
+        <button class="chip" onclick="setTopic('Distributed & Racks/Clusters', this)">Distributed & Racks (Slides 27–35)</button>
+        <button class="chip" onclick="setTopic('HDFS, MapReduce, YARN & Spark', this)">HDFS, MapReduce & Spark (Slides 36–45)</button>
+      </div>
+      <div class="filter-row" id="statusFilters">
+        <span class="filter-label">Filter:</span>
+        <button class="chip active" onclick="setStatus('ALL', this)">All Statuses</button>
+        <button class="chip" onclick="setStatus('UNANSWERED', this)">Unanswered</button>
+        <button class="chip" onclick="setStatus('WRONG', this)">Incorrect Only</button>
+        <button class="chip" onclick="setStatus('FALSE_STMT', this)">"Identify the FALSE Statement" Questions</button>
+      </div>
+    </div>
+
+    <div id="questionsContainer"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        topic: "Core & Data Types",
+        slide: "Slides 2 & 3",
+        type: "Scenario Analysis",
+        q: "A retail corporation installs thousands of in-store sensors and records every online click, doubling its stored data every month. However, executives complain that strategic decisions have not improved. Based on the course background, what is the root cause of this problem?",
+        options: [
+          "Everyday devices and online transactions generate unstructured data that cannot be stored digitally.",
+          "More data does not equal more value unless the organization can effectively analyze it to turn data into useful information.",
+          "Big Data systems only generate value when historical data is deleted and replaced with real-time sensor streams.",
+          "Traditional single-server databases automatically extract insights, so adding sensors reduces data veracity."
+        ],
+        ans: 1,
+        exp: "Slides 2 & 3 emphasize that the course goal is understanding 'how data becomes useful information' and explicitly state: 'More data ≠ more value unless we can analyze it.'"
+      },
+      {
+        id: 2,
+        topic: "Core & Data Types",
+        slide: "Slide 4",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements is FALSE regarding the definition and nature of Big Data?",
+        options: [
+          "Big Data refers to data whose scale, speed, or complexity makes traditional processing approaches difficult or inefficient.",
+          "The primary objective of handling Big Data is to obtain valuable insights and support better decision-making.",
+          "Big Data is a specific commercial software product that organizations purchase to replace all relational databases.",
+          "A dataset can qualify as a Big Data challenge due to its velocity, variety, or data quality issues, not solely its storage volume."
+        ],
+        ans: 2,
+        exp: "Slide 4 explicitly states: 'Big Data is not one software product.' It is defined by scale, speed, or complexity (volume, velocity, variety, or data quality) that challenges traditional processing."
+      },
+      {
+        id: 3,
+        topic: "Core & Data Types",
+        slide: "Slide 4",
+        type: "Conceptual Analysis",
+        q: "A hospital collects continuous patient monitoring streams, doctor free-text notes, and diagnostic images. Even though the total storage size this week is only a few hundred gigabytes, their legacy database fails to process it efficiently. Why does this scenario still represent a Big Data problem?",
+        options: [
+          "Because traditional processing approaches can be overwhelmed by rapid arrival speed (velocity), format complexity (variety), or data quality challenges, not just massive volume.",
+          "Because healthcare data is classified as semi-structured SQL tables that require a central server bottleneck.",
+          "Because any data generated by medical monitoring devices is automatically replicated across thousands of server racks.",
+          "Because legacy databases can only process unstructured audio and image files, failing when structured rows are introduced."
+        ],
+        ans: 0,
+        exp: "Slide 4 notes that Big Data refers to data whose 'scale, speed, or complexity makes traditional processing approaches difficult or inefficient' and that 'The challenge can be volume, velocity, variety, or data quality.'"
+      },
+      {
+        id: 4,
+        topic: "Core & Data Types",
+        slide: "Slide 3",
+        type: "Architectural Reasoning",
+        q: "As everyday devices, phones, sensors, social media, and online transactions generate data continuously, which three interconnected technical stages become progressively more challenging as the data grows?",
+        options: [
+          "Purchasing single software licenses, upgrading one central CPU, and manually reading every record.",
+          "Converting all JSON files into audio streams, deleting historical logs, and disabling network connections.",
+          "Eliminating distributed workers, centralizing all requests into one table, and bypassing quality checks.",
+          "Storing, processing, and analyzing the growing data effectively."
+        ],
+        ans: 3,
+        exp: "Slide 3 states: 'As data grows, storing, processing, and analyzing it becomes more challenging.'"
+      },
+      {
+        id: 5,
+        topic: "Core & Data Types",
+        slide: "Slide 4 & 7",
+        type: "Conceptual Evaluation",
+        q: "How do the slides frame the relationship between raw data collection and organizational decision-making?",
+        options: [
+          "Collecting larger volumes of raw data automatically guarantees superior operational and strategic decisions.",
+          "Obtaining valuable insights and supporting decisions is the objective, and collecting more data alone does not guarantee better decisions.",
+          "Decisions should rely exclusively on real-time streaming data while discarding historical datasets.",
+          "Mathematical and predictive models are unnecessary once a dataset reaches sufficient scale and velocity."
+        ],
+        ans: 1,
+        exp: "Slide 4 states 'The objective is to obtain valuable insights and support decisions,' and Slide 7 warns: 'Collecting more data alone does not guarantee better decisions.'"
+      },
+      {
+        id: 6,
+        topic: "Core & Data Types",
+        slide: "Slide 5",
+        type: "Scenario Analysis",
+        q: "A smart city initiative integrates vehicle speeds and routes from commuters, power usage and temperature from street grids, and clinical monitoring logs from ambulances. According to the 'What Comes Under Big Data?' classification, which three domains are being combined?",
+        options: [
+          "Social Media, Online Shopping, and Finance",
+          "Online Shopping, Finance, and Traditional Relational Warehouses",
+          "Social Media, Finance, and Server Rack Cabinet Management",
+          "Transport & GPS, IoT & Sensors, and Healthcare"
+        ],
+        ans: 3,
+        exp: "Slide 5 categorizes 'Locations, routes, vehicle speeds' under Transport & GPS; 'Temperature, traffic, power usage' under IoT & Sensors; and 'Medical records, monitoring devices' under Healthcare."
+      },
+      {
+        id: 7,
+        topic: "Core & Data Types",
+        slide: "Slide 5",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements about Big Data sources and the data they produce is INCORRECT according to Slide 5?",
+        options: [
+          "Online Shopping platforms primarily generate data through customer orders, searches, and clicks.",
+          "Finance systems generate transactions and market data, while Social Media generates posts, messages, and videos.",
+          "All six Big Data source categories produce identical amounts, arrival speeds, and tabular formats of data.",
+          "Different sources produce different amounts, speeds, and formats of data across domains."
+        ],
+        ans: 2,
+        exp: "Slide 5 explicitly concludes: 'Different sources produce different amounts, speeds, and formats of data.'"
+      },
+      {
+        id: 8,
+        topic: "Core & Data Types",
+        slide: "Slide 6",
+        type: "Deep Comparison",
+        q: "An e-commerce company stores customer orders in SQL tables and CSV files, product catalog attributes in nested JSON and XML documents, and customer support phone recordings along with product photos. How are these three data groups classified?",
+        options: [
+          "SQL/CSV are Structured; JSON/XML are Semi-Structured; audio recordings and images are Unstructured.",
+          "SQL/CSV are Semi-Structured; JSON/XML are Structured; audio recordings and images are Unstructured.",
+          "SQL/CSV and JSON/XML are both Structured; only audio recordings and images are Semi-Structured.",
+          "CSV and JSON are Unstructured text; SQL tables are Structured; images and XML are Semi-Structured."
+        ],
+        ans: 0,
+        exp: "Slide 6 defines: Structured (defined rows and columns: SQL tables, CSV files), Semi-Structured (fields and nested records, no single fixed table: JSON, XML), and Unstructured (no fixed tabular representation: Images, audio, free text)."
+      },
+      {
+        id: 9,
+        topic: "Core & Data Types",
+        slide: "Slide 6",
+        type: "Conceptual Analysis",
+        q: "Why are JSON and XML files classified as 'Semi-Structured' rather than 'Structured' or 'Unstructured'?",
+        options: [
+          "Because they consist of raw pixel and audio waveforms without any recognizable field names or delimiters.",
+          "Because they enforce a single fixed relational table with strict rows and columns identical to SQL tables.",
+          "Because they organize data using fields and nested records, but do not conform to a single fixed table.",
+          "Because they can only be stored on a single central server and cannot be read by Apache Spark."
+        ],
+        ans: 2,
+        exp: "Slide 6 defines Semi-Structured data (JSON, XML) as having 'Fields and nested records. No single fixed table.'"
+      },
+      {
+        id: 10,
+        topic: "Core & Data Types",
+        slide: "Slide 6",
+        type: "Scenario Analysis",
+        q: "A medical researcher analyzes doctor clinical notes written in free text alongside retinal scan images, and links them to a patient summary exported as a CSV file. Which statement accurately describes the structure of these inputs?",
+        options: [
+          "Both the clinical free text and the CSV file are Unstructured because they contain text characters.",
+          "The free text and images are Unstructured (lacking a fixed tabular representation), whereas the CSV file is Structured (organized in defined rows and columns).",
+          "The free text is Semi-Structured like XML, while the CSV file and retinal images are Structured.",
+          "All three inputs are Semi-Structured because medical records contain nested fields."
+        ],
+        ans: 1,
+        exp: "Slide 6 explicitly lists 'Images, audio, free text' as Unstructured ('Content without a fixed tabular representation') and 'SQL tables, CSV files' as Structured ('Organized in defined rows and columns')."
+      },
+      {
+        id: 11,
+        topic: "Core & Data Types",
+        slide: "Slide 7",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following is NOT a valid reason why Big Data is important according to Slide 7?",
+        options: [
+          "It enables organizations to find patterns in large datasets that would be difficult to see manually.",
+          "It helps improve decisions by combining both current and historical data.",
+          "It supports faster services, better planning, and more effective resource allocation.",
+          "It predicts future events and trends automatically from raw data volume alone, eliminating the need for appropriate models."
+        ],
+        ans: 3,
+        exp: "Slide 7 carefully qualifies prediction: 'Predict future events and trends when appropriate models are used,' and reiterates that 'Collecting more data alone does not guarantee better decisions.'"
+      },
+      {
+        id: 12,
+        topic: "Core & Data Types",
+        slide: "Slide 7",
+        type: "Conceptual Analysis",
+        q: "A public transit authority wants to optimize bus schedules next winter. They have live GPS streams from buses today as well as five years of archived winter ridership records. According to Slide 7, how should they approach decision-making?",
+        options: [
+          "Use both current and historical data together with appropriate models to improve decisions, predict trends, and allocate resources.",
+          "Rely solely on today's live GPS streams because historical data reduces processing velocity.",
+          "Inspect the millions of GPS logs manually without analytical models to avoid coordination costs.",
+          "Wait until all unstructured incident reports are converted into audio files before planning routes."
+        ],
+        ans: 0,
+        exp: "Slide 7 highlights using 'current and historical data' to improve decisions, finding patterns difficult to see manually, predicting future events when appropriate models are used, and supporting planning and resource allocation."
+      },
+      {
+        id: 13,
+        topic: "The 5 Vs",
+        slide: "Slides 8 & 9",
+        type: "Scenario Analysis",
+        q: "A navigation platform receives millions of traffic observations stored over the past year (Aspect X), while active commuters transmit continuous location updates every few seconds as they drive (Aspect Y). Which two of the 5 V's correspond to Aspect X and Aspect Y?",
+        options: [
+          "Aspect X is Velocity; Aspect Y is Volume.",
+          "Aspect X is Variety; Aspect Y is Veracity.",
+          "Aspect X is Volume; Aspect Y is Velocity.",
+          "Aspect X is Value; Aspect Y is Variety."
+        ],
+        ans: 2,
+        exp: "Slides 8 & 9 define Volume as 'How much data? Huge datasets / Millions of traffic observations' and Velocity as 'How fast? / How quickly does it arrive? Continuous streams / Location updates over time.'"
+      },
+      {
+        id: 14,
+        topic: "The 5 Vs",
+        slide: "Slides 8 & 9",
+        type: "Deep Comparison",
+        q: "Students often confuse 'Variety' and 'Veracity'. Which scenario correctly distinguishes between these two characteristics of Big Data?",
+        options: [
+          "Variety measures how fast continuous streams arrive; Veracity measures the total terabytes of storage required.",
+          "Variety refers to combining different forms of data (such as text, images, GPS readings, and maps), whereas Veracity refers to whether we can trust the data due to errors, noise, or missing values.",
+          "Variety refers to cleaning inaccurate GPS readings; Veracity refers to storing SQL tables, JSON files, and audio clips.",
+          "Variety answers 'What can we do with the data?'; Veracity answers 'How many observations were collected?'"
+        ],
+        ans: 1,
+        exp: "Slides 8 & 9 define Variety as 'What types? / What form does it take? (Text, images, GPS, maps, incident reports)' and Veracity as 'Can we trust it? / Is the information reliable? (Errors, missing data / GPS can be inaccurate).'"
+      },
+      {
+        id: 15,
+        topic: "The 5 Vs",
+        slide: "Slides 8 & 9",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements about the 5 V's of Big Data is FALSE?",
+        options: [
+          "Big Data is defined exclusively by dataset size (Volume); if a dataset is not massive in size, the other V's do not apply.",
+          "Velocity addresses how quickly data arrives, such as continuous streams of location updates over time.",
+          "Veracity addresses data reliability and trust, accounting for sensor errors, inaccuracies, and missing data.",
+          "Value addresses why the data is useful and what we can do with it, such as producing better route and ETA estimates."
+        ],
+        ans: 0,
+        exp: "Slide 8 explicitly highlights at the bottom: 'Big Data is not only about size (Volume).'"
+      },
+      {
+        id: 16,
+        topic: "The 5 Vs",
+        slide: "Slides 8 & 9",
+        type: "Conceptual Analysis",
+        q: "An IoT traffic system ingests huge datasets (Volume) of continuous streams (Velocity) combining GPS coordinates, road maps, and text incident reports (Variety). However, 40% of the GPS sensors have severe signal drift and missing timestamps that go uncorrected. How does this impact the 5 V's?",
+        options: [
+          "High Volume and Velocity automatically compensate for low Veracity, guaranteeing high Value.",
+          "Poor Veracity corrupts the reliability of the information, directly undermining the system's ability to deliver Value (accurate route and ETA estimates).",
+          "Missing timestamps reduce Variety, turning unstructured text into structured SQL tables.",
+          "Signal drift increases Value because unusual readings always indicate heavy traffic congestion."
+        ],
+        ans: 3,
+        wait_check: "Wait—let's make sure index 3 is the correct option for Q16 as planned in our key! Let's place the correct option at index 3 (D)!",
+        options: [
+          "High Volume and Velocity automatically compensate for low Veracity, guaranteeing accurate route recommendations.",
+          "Missing timestamps eliminate Velocity and convert Semi-Structured JSON into Structured SQL tables.",
+          "Signal drift increases Value because any corrupted GPS reading proves that the highway is congested.",
+          "Poor Veracity compromises the reliability of the data, which directly undermines the ability to extract trustworthy Value (better decisions and accurate ETA estimates)."
+        ],
+        ans: 3,
+        exp: "Slides 8 & 9 show that Veracity ('Can we trust it? Errors, missing data / GPS can be inaccurate') is essential to achieving Value ('Why useful? Better decisions / Better route and ETA estimates')."
+      },
+      {
+        id: 17,
+        topic: "The 5 Vs",
+        slide: "Slide 9",
+        type: "Scenario Analysis",
+        q: "In Slide 9 ('The 5 V's — Simple Questions'), if a system architect asks: 'What form does the incoming data take?' and 'What can we actually do with it to help users?', which two V's are being evaluated in order?",
+        options: [
+          "Volume and Velocity",
+          "Variety and Value",
+          "Veracity and Variety",
+          "Velocity and Veracity"
+        ],
+        ans: 1,
+        exp: "Slide 9 maps 'What form does it take?' (GPS, maps, incident reports) to Variety, and 'What can we do with it?' (Better route and ETA estimates) to Value."
+      },
+      {
+        id: 18,
+        topic: "Case 1: Google Maps",
+        slide: "Slides 10 & 11",
+        type: "Scenario Analysis",
+        q: "On a highway segment where the typical traffic speed is 80–90 km/h, Google Maps receives three simultaneous observations: Vehicle A at 90 km/h, Vehicle B at 80 km/h, and Vehicle C at 10 km/h. Why does Google Maps NOT immediately declare the road segment congested?",
+        options: [
+          "Because any vehicle moving at 10 km/h has a broken GPS transmitter that must be permanently blocked.",
+          "Because Google Maps only updates traffic routes once every 24 hours using offline batch processing.",
+          "Because one slow vehicle does not prove that the road is congested; Vehicle C might simply be pulling over or exiting while other cars flow normally.",
+          "Because speeds above 80 km/h are impossible for passenger cars and are flagged as location errors."
+        ],
+        ans: 2,
+        exp: "Slide 11 illustrates Vehicle A (90 km/h), Vehicle B (80 km/h), and Vehicle C (10 km/h) and concludes: 'One slow vehicle does not prove that the road is congested.'"
+      },
+      {
+        id: 19,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 12",
+        type: "Quantitative & Conceptual",
+        q: "According to the simplified GPS speed calculation in Slide 12 (Speed = Distance / Time), suppose a vehicle's GPS coordinates change by a distance of 2 km over a time interval of 12 minutes. What is the vehicle's estimated speed, and what principle is used?",
+        options: [
+          "24 km/h — calculated by multiplying 2 km by 12 minutes.",
+          "6 km/h — calculated by dividing 12 minutes by 2 km.",
+          "120 km/h — calculated by dividing 12 minutes by 0.1 hours.",
+          "10 km/h — because 12 minutes equals 12/60 = 0.2 hours, and 2 km / 0.2 hours = 10 km/h, estimating speed from changing position over time."
+        ],
+        ans: 3,
+        exp: "Slide 12 shows: Time in hours = minutes / 60 (here 12 / 60 = 0.2 hour), and Speed = Distance / Time = 2 km / 0.2 hour = 10 km/h ('changing position over time provides a speed estimate')."
+      },
+      {
+        id: 20,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 13",
+        type: "Deep Comparison",
+        q: "Slide 13 compares 'Typical conditions' (Car 1: 90 km/h, Car 2: 85 km/h, Car 3: 80 km/h) against 'Current observations' (Car 1: 12 km/h, Car 2: 10 km/h, Car 3: 8 km/h). What makes the current observations strong evidence of real traffic congestion?",
+        options: [
+          "Repeated slow observations (8–12 km/h) across multiple vehicles on the same road segment, contrasted against typical speeds of 80–90 km/h, are much more informative than a single slow car.",
+          "The presence of Car 3 travelling at 8 km/h alone is sufficient to prove congestion regardless of Car 1 and Car 2.",
+          "Typical conditions are ignored during route planning because historical speeds have no relation to road capacity.",
+          "Any speed below 15 km/h is automatically flagged as an impossible GPS location error and deleted."
+        ],
+        ans: 0,
+        exp: "Slide 13 demonstrates that while typical speeds are 80–90 km/h, observing multiple cars simultaneously at 8–12 km/h confirms traffic: 'One slow car is not enough: repeated slow observations across a segment are more informative.'"
+      },
+      {
+        id: 21,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 14",
+        type: "Scenario Analysis",
+        q: "During Google Maps data cleaning, the system encounters two unusual readings on a highway: Car X reports 10 km/h, and Car Y reports 7,200 km/h. How should the data cleaning pipeline handle Car X and Car Y respectively?",
+        options: [
+          "Delete both Car X and Car Y immediately because both deviate from the typical 90 km/h highway speed.",
+          "Keep both Car X and Car Y as valid evidence of extreme traffic conditions.",
+          "For Car X (10 km/h), check nearby observations because it may indicate traffic; for Car Y (7,200 km/h), flag it as a GPS location error because it is impossible for a car.",
+          "Flag Car X (10 km/h) as a GPS location error, and average Car Y (7,200 km/h) with nearby vehicles."
+        ],
+        ans: 2,
+        exp: "Slide 14 specifies: 10 km/h -> 'May indicate traffic' -> 'Check nearby observations'; 7,200 km/h -> 'Impossible for a car' -> 'Flag GPS location error'. It concludes: 'Data cleaning is related to Veracity — but unusual does not mean wrong.'"
+      },
+      {
+        id: 22,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 14",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements about the Google Maps Data Cleaning table (Slide 14) is INCORRECT?",
+        options: [
+          "A reading of 90 km/h is interpreted as plausible on some roads, and the possible action is to keep it if consistent.",
+          "Because data cleaning addresses Veracity, every unusual speed reading that differs from the road average must be rejected as wrong.",
+          "A missing GPS point represents an incomplete observation that requires handling the missing value.",
+          "An unusual reading like 10 km/h does not automatically mean the data is wrong; it must be checked against nearby observations."
+        ],
+        ans: 1,
+        exp: "Slide 14 explicitly warns against assuming unusual data is wrong: 'Data cleaning is related to Veracity — but unusual does not mean wrong.'"
+      },
+      {
+        id: 23,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 15",
+        type: "Pipeline Tracing",
+        q: "In the Google Maps data processing flow (Collect → Store → Process → Analyze), which specific task is performed during the 'Process' stage before 'Analyze' estimates traffic and ETA?",
+        options: [
+          "Gathering raw GPS signals directly from satellites",
+          "Archiving historical map tiles on a single central server",
+          "Rendering the visual user interface on the driver's phone",
+          "Validating and aggregating the observations"
+        ],
+        ans: 3,
+        exp: "Slide 15 defines the four boxes as: Collect (GPS and road observations) → Store (Relevant traffic history) → Process (Validate and aggregate) → Analyze (Estimate traffic and ETA)."
+      },
+      {
+        id: 24,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 15",
+        type: "Architectural Reasoning",
+        q: "Why does Slide 15 note that the linear diagram 'Collect → Store → Process → Analyze' is a simplified flow and that 'Actual systems may combine streaming and storage'?",
+        options: [
+          "Because live navigation must process continuous real-time GPS streams on the fly while also referencing stored historical traffic patterns.",
+          "Because production systems skip data validation and aggregation whenever traffic is heavy.",
+          "Because Google Maps stores all data on local CSV files inside each driver's smartphone without servers.",
+          "Because streaming systems cannot estimate arrival times or suggest alternative routes."
+        ],
+        ans: 0,
+        exp: "Slide 15 notes: 'The flow is simplified. Actual systems may combine streaming and storage,' reflecting how real-time traffic updates (streaming) work alongside relevant traffic history (storage)."
+      },
+      {
+        id: 25,
+        topic: "Case 1: Google Maps",
+        slide: "Slide 16",
+        type: "Scenario Analysis",
+        q: "In the Google Maps 5 V's summary (Slide 16), how are 'Variety' and 'Value' specifically represented?",
+        options: [
+          "Variety is frequent updates as vehicles move; Value is large-scale traffic observations.",
+          "Variety is combining GPS readings, the road network, and incident reports; Value is producing traffic estimates, routes, and arrival times.",
+          "Variety is incorrect or noisy GPS observations; Value is flagging 7,200 km/h location errors.",
+          "Variety is storing data in HDFS blocks; Value is running MapReduce word counts."
+        ],
+        ans: 1,
+        exp: "Slide 16 maps Variety to 'GPS readings, road network, incident reports' and Value to 'Traffic estimates, routes, and arrival times.'"
+      },
+      {
+        id: 26,
+        topic: "Case 1: Google Maps",
+        slide: "Slides 10–16",
+        type: "Conceptual Synthesis",
+        q: "In Case Study 1 (Slide 10), Route A is shown as 60 minutes (heavy traffic) and Route B as 45 minutes (lighter traffic). What is the complete analytical chain that allows Google Maps to recommend Route B?",
+        options: [
+          "Collect a single slow car's speed on Route A → Delete all historical data → Recommend Route B.",
+          "Collect only text incident reports → Store them in a single SQL table → Bypass data cleaning → Suggest Route B.",
+          "Collect large-scale GPS/road observations → Store relevant history → Validate readings (cleaning noise like 7,200 km/h while confirming repeated 8–12 km/h slowdowns) and aggregate → Analyze to estimate congestion/ETA and suggest Route B.",
+          "Use numerical atmospheric equations to simulate vehicle aerodynamics → Store in YARN → Output Route B."
+        ],
+        ans: 2,
+        exp: "Slides 10–16 show the full chain: collecting GPS/road observations, storing relevant traffic history, validating/cleaning (keeping consistent plausible speeds, checking nearby observations for slow speeds, flagging impossible speeds) and aggregating, then analyzing to estimate congestion/ETA and suggest a route."
+      },
+      {
+        id: 27,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slides 17 & 20",
+        type: "Conceptual Analysis",
+        q: "Forecasters predicted Hurricane Michael's likely path several days before landfall. If a student claims, 'The massive volume of satellite and buoy data alone generated the storm track prediction without needing physics models,' how would you evaluate this claim based on the slides?",
+        options: [
+          "The claim is incorrect: Big Data supports forecasting, but data alone does not make the prediction—numerical weather models using physical equations are required to simulate atmospheric evolution over time.",
+          "The claim is correct: once weather observations reach sufficient volume, physical equations are no longer needed.",
+          "The claim is incorrect: Hurricane Michael was predicted using only historical storm records from the 1990s without any current sensor observations.",
+          "The claim is correct: MapReduce word count algorithms directly calculate hurricane landfall coordinates."
+        ],
+        ans: 0,
+        exp: "Slides 17 & 20 explicitly emphasize: 'The forecasting process uses physical equations to simulate atmospheric evolution over time. Big Data supports forecasting. Data alone does not make the prediction.'"
+      },
+      {
+        id: 28,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slide 18",
+        type: "Scenario Analysis",
+        q: "During Hurricane Michael, forecasters integrated three primary categories of data sources: (1) Clouds and atmospheric measurements, (2) Temperature and air pressure, and (3) Wind and ocean observations. Which sources provided (1), (2), and (3) respectively?",
+        options: [
+          "(1) Weather Stations, (2) Buoys & Other Sensors, (3) Satellites",
+          "(1) Buoys & Other Sensors, (2) Satellites, (3) Weather Stations",
+          "(1) Smartphone GPS, (2) Road Sensors, (3) Satellites",
+          "(1) Satellites, (2) Weather Stations, (3) Buoys & Other Sensors"
+        ],
+        ans: 3,
+        exp: "Slide 18 matches: Satellites → Clouds, atmospheric measurements; Weather Stations → Temperature and air pressure; Buoys & Other Sensors → Wind and ocean observations."
+      },
+      {
+        id: 29,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slide 19",
+        type: "Deep Comparison",
+        q: "During quality control for Hurricane Michael (Slide 19), sensors report three extreme numbers: an air temperature of 150°C, a wind speed of 130 km/h, and a surface air pressure of 0 hPa. How should forecasters evaluate these three readings?",
+        options: [
+          "Reject all three readings immediately because extreme numbers are always sensor malfunctions.",
+          "Accept 130 km/h wind speed as possible (storms can create high winds), but reject 150°C air temperature (likely wrong: sensor/recording problem) and 0 hPa pressure (wrong near surface: invalid/missing measurement).",
+          "Accept 0 hPa pressure because hurricanes create a complete vacuum at the ocean surface, and reject 130 km/h wind speed.",
+          "Accept 150°C air temperature and 130 km/h wind speed as valid, and only reject 0 hPa pressure."
+        ],
+        ans: 1,
+        exp: "Slide 19 shows: Air temperature 150°C is 'Likely wrong (Sensor or recording problem)', Wind speed 130 km/h is 'Possible (Storms can create high winds)', and Pressure 0 hPa is 'Wrong near surface (Invalid / missing measurement)', concluding: 'Extreme readings can be real — always interpret them in context.'"
+      },
+      {
+        id: 30,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slide 19",
+        type: "Conceptual Analysis",
+        q: "In Slide 19, an air temperature observation of 25°C is listed as 'Plausible', yet the table specifies 'Check place and time' under 'Why?'. What data quality insight does this convey?",
+        options: [
+          "A reading of 25°C is physically impossible on Earth and indicates a broken thermometer.",
+          "Temperature sensors only work during the daytime and must be turned off at night.",
+          "Even when a numerical value looks plausible on its own, verifying its reliability still requires checking whether it is consistent with the specific location and timestamp.",
+          "Plausible readings should always be overwritten with the global average temperature."
+        ],
+        ans: 2,
+        exp: "Slide 19 pairs 'Air temperature: 25°C | Plausible' with 'Check place and time' and notes at the bottom: 'Always interpret them in context.'"
+      },
+      {
+        id: 31,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slide 20",
+        type: "Pipeline Tracing",
+        q: "In the Hurricane Michael pipeline (Collect → Store → Prepare → Simulate → Forecast), what is the exact role of the 'Prepare' stage, and why must it occur before 'Simulate'?",
+        options: [
+          "It performs quality control and data assimilation so that erroneous sensor readings (like 150°C or 0 hPa) do not corrupt the numerical weather prediction model.",
+          "It broadcasts public evacuation warnings before any weather observations are collected.",
+          "It divides text documents into (word, 1) pairs using MapReduce.",
+          "It replaces physical atmospheric equations with unstructured social media posts."
+        ],
+        ans: 0,
+        exp: "Slide 20 defines 'Prepare' as 'Quality control and assimilation', sitting directly between 'Store (Available measurements)' and 'Simulate (Numerical weather prediction)'."
+      },
+      {
+        id: 32,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slide 21",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements about the 5 V's in the Hurricane Michael case study (Slide 21) is INCORRECT?",
+        options: [
+          "Volume is represented by the large volumes of weather measurements gathered from satellites, stations, and buoys.",
+          "Velocity is represented by new weather observations arriving continually as the storm evolves.",
+          "Variety is represented by combining satellite imagery, pressure, wind, and temperature data.",
+          "Value is represented by the raw uncleaned sensor errors, while Veracity refers to issuing earlier public warnings."
+        ],
+        ans: 3,
+        exp: "Slide 21 states that Veracity is 'Measurements need quality control' and Value is 'Earlier warnings and better preparation' (the statement in D swaps Veracity and Value)."
+      },
+      {
+        id: 33,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slides 14 & 19",
+        type: "Conceptual Synthesis",
+        q: "What fundamental data Veracity principle connects a 10 km/h vehicle speed in Google Maps (Slide 14) with a 130 km/h wind speed in Hurricane Michael (Slide 19)?",
+        options: [
+          "Both readings are physically impossible and must be flagged as hardware location errors.",
+          "Both readings are unusual or extreme compared to normal conditions, yet both can be real indicators of the exact phenomenon we want to detect (traffic congestion or a severe storm) when interpreted in context.",
+          "Both readings represent missing sensor values that must be replaced with zeros before storage.",
+          "Both readings prove that one single sensor observation is sufficient to make a final prediction without checking context."
+        ],
+        ans: 1,
+        exp: "Slide 14 ('Data cleaning is related to Veracity — but unusual does not mean wrong') and Slide 19 ('Extreme readings can be real — always interpret them in context') teach the exact same foundational analytical principle."
+      },
+      {
+        id: 34,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 22",
+        type: "Deep Comparison",
+        q: "Slide 22 unifies both case studies under 'The Big Data Lifecycle' (Collect → Store → Process → Analyze → Value). How does the 'Analyze' stage differ between Google Maps and Hurricane Michael, while serving the same lifecycle purpose?",
+        options: [
+          "In Google Maps, Analyze cleans GPS errors; in Hurricane Michael, Analyze collects buoy data.",
+          "In Google Maps, Analyze retains data on disk; in Hurricane Michael, Analyze checks sensor readings.",
+          "In both systems, Analyze finds patterns or predicts: Google Maps estimates traffic and travel time, whereas Hurricane Michael simulates the storm track.",
+          "In both systems, Analyze only stores raw files in HDFS without supporting any decision."
+        ],
+        ans: 2,
+        exp: "Slide 22 shows that the general 'Analyze' stage ('Find patterns or predict') maps to 'Estimate traffic' in Google Maps and 'Simulate storm track' in Hurricane Michael, leading to 'Value (Support a decision)'."
+      },
+      {
+        id: 35,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 22",
+        type: "Pipeline Tracing",
+        q: "According to the general Big Data Lifecycle diagram on Slide 22, which stage is explicitly defined as 'Clean and transform', and where does it sit in the sequence?",
+        options: [
+          "Collect — sitting at the very beginning before Store",
+          "Store — sitting between Collect and Process",
+          "Analyze — sitting between Process and Value",
+          "Process — sitting after Store ('Retain data') and before Analyze ('Find patterns or predict')"
+        ],
+        ans: 3,
+        exp: "Slide 22 defines the 5-stage sequence: Collect (Gather data) → Store (Retain data) → Process (Clean and transform) → Analyze (Find patterns or predict) → Value (Support a decision)."
+      },
+      {
+        id: 36,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 23",
+        type: "Scenario Analysis",
+        q: "An analytics engineering team successfully collects continuous streams from multiple sources, stores them reliably at scale, and cleans duplicated records. However, when two worker servers crash during a heavy calculation, the job stalls and fails to meet performance targets. Which of the six Big Data Challenges on Slide 23 is the team facing?",
+        options: [
+          "Processing — which encompasses performance, distribution, and handling failures",
+          "Communicating — which encompasses presenting useful results clearly to stakeholders",
+          "Security — which encompasses privacy, permissions, and responsible access",
+          "Quality — which encompasses missing, duplicated, or incorrect records"
+        ],
+        ans: 0,
+        exp: "Slide 23 defines the 'Processing' challenge specifically as 'Performance, distribution, and failures.'"
+      },
+      {
+        id: 37,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 23",
+        type: "Scenario Analysis",
+        q: "A hospital's Big Data pipeline processes millions of patient records accurately, but the final output is a complex raw log that doctors cannot interpret during emergency planning, and unauthorized staff can view private patient identifiers. Which two Big Data Challenges from Slide 23 were neglected?",
+        options: [
+          "Collecting and Storing",
+          "Storing and Processing",
+          "Communicating (presenting useful results clearly) and Security (privacy, permissions, and responsible access)",
+          "Quality (missing or duplicated records) and Collecting (continuous data from multiple sources)"
+        ],
+        ans: 2,
+        exp: "Slide 23 defines 'Security' as 'Privacy, permissions, and responsible access' and 'Communicating' as 'Presenting useful results clearly.'"
+      },
+      {
+        id: 38,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 24",
+        type: "Deep Comparison",
+        q: "A banking platform uses System A (e.g., an app database like MongoDB) to process a customer's live account balance check and card swipe in milliseconds, and System B (e.g., Apache Spark / distributed SQL) to scan millions of historical transactions across regions to discover fraud patterns. How do System A and System B compare according to Slide 24?",
+        options: [
+          "System A is an Analytical System answering 'What can we learn from the data?'; System B is an Operational System answering 'What is happening now?'",
+          "System A is an Operational System (serving ongoing requests via frequent reads/updates to answer 'What is happening now?'); System B is an Analytical System (performing large scans, joins, and aggregations to answer 'What can we learn from the data?').",
+          "Both System A and System B are Operational Systems because financial data is always structured.",
+          "System A performs large multi-year table joins, while System B only updates single user rows."
+        ],
+        ans: 1,
+        exp: "Slide 24 contrasts Operational Systems (Serve ongoing requests; Frequent reads/updates; e.g., MongoDB; 'What is happening now?') with Analytical Systems (Find patterns and summaries; Large scans, joins, aggregation; e.g., Spark / distributed SQL; 'What can we learn from the data?')."
+      },
+      {
+        id: 39,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 24",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements contrasting Operational and Analytical Big Data systems (Slide 24) is FALSE?",
+        options: [
+          "Analytical systems are designed primarily for frequent single-record updates to serve ongoing live user login requests.",
+          "Operational systems focus on serving ongoing requests and answering the question 'What is happening now?'",
+          "Analytical systems execute workloads involving large scans, joins, and aggregations to find patterns and summaries.",
+          "An application database such as MongoDB is an example of an operational system, whereas Spark or distributed SQL is an example of an analytical system."
+        ],
+        ans: 0,
+        exp: "Slide 24 shows that 'Frequent reads/updates' to 'Serve ongoing requests' is the workload and goal of Operational Systems, not Analytical Systems."
+      },
+      {
+        id: 40,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 25",
+        type: "Scenario Analysis",
+        q: "A telecommunications provider analyzes terabytes of cell tower logs to monitor network traffic, evaluate network performance, improve customer service, and plan where to build new towers next year. According to Slide 25, what is the four-item application focus here, and what is the overarching business Value?",
+        options: [
+          "Focus: Hospital planning and storm prediction; Value: replacing all operational databases.",
+          "Focus: Online shopping cart clicks and movie recommendations; Value: eliminating network hardware.",
+          "Focus: Manual inspection of SQL tables; Value: collecting more data without models.",
+          "Focus: Network performance, traffic monitoring, customer service, and capacity planning under Telecommunications; Value: better products, services, and operational decisions."
+        ],
+        ans: 3,
+        exp: "Slide 25 lists 'Network performance, Traffic monitoring, Customer service, Capacity planning' under Telecommunications, with the bottom note: 'Value: better products, services, and operational decisions.'"
+      },
+      {
+        id: 41,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 25",
+        type: "Scenario Analysis",
+        q: "An online marketplace uses Big Data analytics to understand buyer tastes, suggest relevant items, block stolen credit cards, and estimate how many units of a product to stock next month. Which four Web & E-Commerce applications from Slide 25 do these represent?",
+        options: [
+          "Network performance, traffic monitoring, customer service, and capacity planning",
+          "Customer preferences, recommendations, fraud detection, and demand forecasting",
+          "Hospital planning, patient monitoring, population trends, and public-service operations",
+          "Satellite imagery, air pressure quality control, numerical simulation, and storm warnings"
+        ],
+        ans: 1,
+        exp: "Slide 25 lists 'Customer preferences, Recommendations, Fraud detection, Demand forecasting' under Web & E-Commerce."
+      },
+      {
+        id: 42,
+        topic: "Lifecycle, Challenges & Systems",
+        slide: "Slide 26",
+        type: "Identify the FALSE Statement",
+        q: "Which pairing of a Public Services sector and its Big Data applications is INCORRECT according to Slide 26?",
+        options: [
+          "Healthcare: Hospital planning, patient monitoring, and population trends.",
+          "Transportation: Traffic management and travel-time forecasting.",
+          "Government: E-commerce product recommendations and credit card fraud detection.",
+          "Weather Forecasting: Storm prediction and early warnings."
+        ],
+        ans: 2,
+        exp: "Slide 26 pairs Government with 'Public-service planning and operations', whereas Recommendations and Fraud detection belong to Web & E-Commerce (Slide 25)."
+      },
+      {
+        id: 43,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 27",
+        type: "Architectural Reasoning",
+        q: "In the 'Traditional Approach' (Users / Apps → Central Server → Database), why does an architecture that works well for smaller applications eventually fail when confronted with Big Data?",
+        options: [
+          "Because a single machine may become a storage or processing bottleneck as data volume, velocity, and query complexity grow.",
+          "Because a central server is incapable of storing structured SQL tables on a local disk.",
+          "Because smaller applications require thousands of server racks to process basic user requests.",
+          "Because the traditional approach distributes data across too many worker nodes."
+        ],
+        ans: 0,
+        exp: "Slide 27 states that the Traditional Approach is 'Simple for many smaller applications,' but warns: 'A single machine may become a storage or processing bottleneck.'"
+      },
+      {
+        id: 44,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 28",
+        type: "Conceptual Analysis",
+        q: "When an organization transitions from a single central machine to 'Distributed Processing' (splitting a large dataset across Worker 1, Worker 2, Worker 3, and Worker 4, each handling Data + Task), what fundamental engineering trade-off must they accept?",
+        options: [
+          "Distributed workers cannot run tasks in parallel and must wait for each other sequentially.",
+          "Total storage capacity shrinks to the disk size of a single worker node.",
+          "Coordination and network communication are completely eliminated.",
+          "Parallel work allows the system to scale, but it adds communication and coordination costs across the nodes."
+        ],
+        ans: 3,
+        exp: "Slide 28 highlights the core distributed systems trade-off: 'Parallel work can scale — but adds communication and coordination costs.'"
+      },
+      {
+        id: 45,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 29",
+        type: "Identify the FALSE Statement",
+        q: "Which statement regarding Google's influence on Big Data systems and Apache Hadoop (Slide 29) is FALSE?",
+        options: [
+          "Google Research published influential work on the Google File System (GFS) and the MapReduce programming model.",
+          "Apache Hadoop is an open-source ecosystem influenced by distributed storage and processing research.",
+          "Apache Hadoop is a proprietary commercial product owned and sold directly by Google.",
+          "Hadoop is a separate Apache open-source project, not a Google product."
+        ],
+        ans: 2,
+        exp: "Slide 29 explicitly clarifies at the bottom: 'Hadoop is a separate Apache open-source project, not a Google product.'"
+      },
+      {
+        id: 46,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 30",
+        type: "Conceptual Knowledge",
+        q: "According to Slide 30 ('Hadoop — A Distributed Framework'), which statement accurately describes the origin and core concept of Hadoop?",
+        options: [
+          "Hadoop was created by Google engineers to run exclusively on a single supercomputer.",
+          "Doug Cutting and Mike Cafarella started the project (named after Doug Cutting's son's toy elephant) to store and process big data using many computers.",
+          "Hadoop is an operational mobile database named after a relational SQL standard.",
+          "Hadoop only processes data in memory and cannot store files across multiple computers."
+        ],
+        ans: 1,
+        exp: "Slide 30 states: 'Hadoop stores and processes big data using many computers. Doug Cutting and Mike Cafarella started the project. Its name came from Doug Cutting’s son’s toy elephant!'"
+      },
+      {
+        id: 47,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 31",
+        type: "Deep Comparison",
+        q: "In the Hadoop Ecosystem (Slide 31), four components provide Storage, Processing, Resource Management, and Common Utilities. Which option correctly maps all four components to their exact roles?",
+        options: [
+          "HDFS: Cluster resources; MapReduce: Shared libraries; YARN: Distributed file storage; Hadoop Common: Batch processing",
+          "HDFS: Batch processing; MapReduce: Distributed file storage; YARN: Shared libraries; Hadoop Common: Cluster resources",
+          "HDFS: Shared libraries; MapReduce: Cluster resources; YARN: Batch processing; Hadoop Common: Distributed file storage",
+          "HDFS: Distributed file storage; MapReduce: Batch processing; YARN: Cluster resources; Hadoop Common: Shared libraries"
+        ],
+        ans: 3,
+        exp: "Slide 31 defines the Hadoop Ecosystem: HDFS (Distributed file storage), MapReduce (Batch processing), YARN (Cluster resources), and Hadoop Common (Shared libraries)."
+      },
+      {
+        id: 48,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slides 32 & 33",
+        type: "Conceptual Analysis",
+        q: "A junior technician points to an empty metal server rack in a data center and says, 'This rack is a DataNode that stores HDFS file blocks.' Based on Slides 32 and 33, why is the technician mistaken?",
+        options: [
+          "Because a rack is just a metal cabinet that holds physical servers—an empty rack does not store data; a physical server (computer) inside the rack running HDFS software acts as a DataNode to store file blocks.",
+          "Because a rack is a software library inside Hadoop Common rather than physical hardware.",
+          "Because each data center can only hold one single DataNode inside one single rack.",
+          "Because DataNodes only store metadata while empty metal racks store the replicated file blocks."
+        ],
+        ans: 0,
+        exp: "Slide 32 states: 'A rack is a metal cabinet. We put physical servers inside it. An empty rack does not store data.' Slide 33 adds: 'A server is a computer. With HDFS software, it can act as a DataNode. A DataNode stores blocks of files.'"
+      },
+      {
+        id: 49,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slides 33 & 35",
+        type: "Architectural Hierarchy",
+        q: "How do DataNodes, server racks, networks, and data centers relate to one another in physical Big Data infrastructure (Slides 33 & 35)?",
+        options: [
+          "One DataNode contains hundreds of data centers, and racks are connected without a network.",
+          "One rack may contain several DataNodes (physical servers running HDFS), a data center can contain hundreds or thousands of racks connected through a network, and a Hadoop cluster runs across these servers.",
+          "Each server rack can hold at most one physical server, and a Hadoop cluster cannot span more than one rack.",
+          "A data center is a single computer that replaces networks and server racks."
+        ],
+        ans: 1,
+        exp: "Slide 33 notes: 'One rack may contain several DataNodes. A data center can contain hundreds or thousands of racks.' Slide 35 adds: 'A data center holds many racks and servers. Servers are connected through a network. A Hadoop cluster can run across these servers.'"
+      },
+      {
+        id: 50,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slide 34",
+        type: "Deep Comparison",
+        q: "A company's dataset grows from 10 TB to 500 TB. Instead of buying one increasingly expensive supercomputer, they add dozens of standard servers to their cluster so HDFS can spread file blocks across more DataNodes. What scaling strategy is this, and how does Slide 34 describe how Hadoop grows?",
+        options: [
+          "Vertical scaling — Hadoop grows only by upgrading the CPU and RAM of one single computer.",
+          "Centralized scaling — Hadoop consolidates all blocks onto the NameNode's local disk.",
+          "Horizontal scaling — when there is more data, we add more servers; HDFS spreads file blocks across DataNodes so many nodes work together ('Hadoop grows by adding machines, not only by upgrading one computer').",
+          "Local mode scaling — Hadoop deletes extra copies of blocks so all data fits on one laptop."
+        ],
+        ans: 2,
+        exp: "Slide 34 defines Horizontal scaling: 'More data? Add more servers. HDFS spreads file blocks across DataNodes. Many nodes can work together. Hadoop grows by adding machines, not only by upgrading one computer.'"
+      },
+      {
+        id: 51,
+        topic: "Distributed & Racks/Clusters",
+        slide: "Slides 32–35",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements regarding Hadoop cluster infrastructure (Slides 32–35) is FALSE?",
+        options: [
+          "A physical server is a computer that can act as an HDFS DataNode once HDFS software is installed on it.",
+          "In horizontal scaling, adding more servers allows HDFS to spread file blocks across additional DataNodes.",
+          "Servers across racks in a data center are connected through a network so a Hadoop cluster can run across them.",
+          "Hadoop scales exclusively by upgrading a single computer's hardware rather than adding more machines to the cluster."
+        ],
+        ans: 3,
+        exp: "Slide 34 explicitly states the opposite: 'Hadoop grows by adding machines, not only by upgrading one computer.'"
+      },
+      {
+        id: 52,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 36",
+        type: "Architectural Reasoning",
+        q: "In HDFS (Hadoop Distributed File System), a client wants to read a large file that has been split into blocks across DataNode 1, DataNode 2, and DataNode 3. What is the precise division of labor between the NameNode and the DataNodes?",
+        options: [
+          "The NameNode manages metadata and block locations (knowing where each block lives), while the DataNodes physically store the actual data blocks.",
+          "The NameNode physically stores all file blocks on its own disk, while DataNodes only keep directory filenames.",
+          "Both the NameNode and DataNodes execute MapReduce word count shuffling in memory without storing blocks.",
+          "DataNodes manage cluster-wide metadata, while the NameNode acts as a metal cabinet for servers."
+        ],
+        ans: 0,
+        exp: "Slide 36 illustrates NameNode ('Metadata / block locations') and DataNodes 1, 2, 3 ('Data blocks'), stating: 'DataNodes store file blocks. The NameNode manages metadata.'"
+      },
+      {
+        id: 53,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 37",
+        type: "Scenario Analysis",
+        q: "Suppose a 300 MB file is stored in HDFS across a cluster, and suddenly the hard drive on DataNode 2 suffers a complete hardware failure. Why does the system NOT lose the file data?",
+        options: [
+          "Because the NameNode rebuilds the missing data using numerical weather prediction equations.",
+          "Because HDFS divides files into blocks and stores replicated file blocks (extra copies) across different DataNodes; if one DataNode fails, another copy on a different DataNode can be used.",
+          "Because MapReduce automatically deletes any calculation that depends on DataNode 2.",
+          "Because YARN stores a backup copy of all HDFS files inside local CSV spreadsheets."
+        ],
+        ans: 1,
+        exp: "Slide 37 ('HDFS — Data Distribution and Replication') explains: 'HDFS divides files into blocks. DataNodes store blocks and extra copies. If one DataNode fails, another copy can be used.'"
+      },
+      {
+        id: 54,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 38",
+        type: "Pipeline Tracing",
+        q: "In Slide 38 ('MapReduce — Processing Concept'), given the short text input 'car car road', what is the exact transformation of data across the Map, Shuffle, and Reduce stages?",
+        options: [
+          "Map outputs 'car: 2, road: 1' → Shuffle outputs '(car, 1)' → Reduce stores the file in HDFS.",
+          "Map groups 'car: [1, 1]' → Shuffle adds the counts to 'car: 2' → Reduce splits the input string.",
+          "Map creates pairs '(car, 1) (car, 1) (road, 1)' → Shuffle groups by word into 'car: [1, 1]' and 'road: [1]' → Reduce sums the counts into 'car: 2' and 'road: 1'.",
+          "Map deletes duplicate words → Shuffle sorts words alphabetically → Reduce outputs 'car: 1, road: 1'."
+        ],
+        ans: 2,
+        exp: "Slide 38 traces: Input ('car car road') → Map: '(car, 1) (car, 1) (road, 1)' → Shuffle: 'car: [1, 1]' and 'road: [1]' → Reduce: 'car: 2' and 'road: 1'."
+      },
+      {
+        id: 55,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 38",
+        type: "Conceptual Analysis",
+        q: "Why does Slide 38 explicitly state at the bottom: 'MapReduce is a data-processing approach. File storage is a separate concern'?",
+        options: [
+          "To emphasize the architectural separation between how data is processed (MapReduce: Map, Shuffle, Reduce) versus how files are stored across machines (such as HDFS).",
+          "Because MapReduce cannot read data that has been stored on any computer disk.",
+          "Because HDFS is a processing engine that replaces MapReduce.",
+          "Because MapReduce is a physical server rack rather than a programming model."
+        ],
+        ans: 0,
+        exp: "Slide 38 distinguishes the processing model (MapReduce) from the storage layer (HDFS): 'MapReduce is a data-processing approach. File storage is a separate concern.'"
+      },
+      {
+        id: 56,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 39",
+        type: "Pipeline Tracing",
+        q: "In Slide 39 ('MapReduce — Word Count Example'), the input has three lines: 'Deer Bear River', 'Car Car River', and 'Deer Car Bear'. After Splitting and Mapping, what happens during the 'Shuffling' stage, and what is the 'Final result'?",
+        options: [
+          "Shuffling keeps each line separate; the final result is 3 lines of 3 words each.",
+          "Shuffling adds the numbers immediately without grouping; the final result is Total = 9.",
+          "Shuffling discards repeated words; the final result is Bear: 1, Car: 1, Deer: 1, River: 1.",
+          "Shuffling groups identical words across all three splits (e.g., three '(Car, 1)' pairs together, two '(Bear, 1)' pairs, two '(Deer, 1)' pairs, and two '(River, 1)' pairs), and Reducing adds the counts to produce: Bear: 2, Car: 3, Deer: 2, River: 2."
+        ],
+        ans: 3,
+        exp: "Slide 39 shows the four steps: Split (divide the input into 3 lines), Map (create (word, 1) pairs), Shuffle (group the same words across splits), and Reduce (add the counts to get Bear, 2; Car, 3; Deer, 2; River, 2)."
+      },
+      {
+        id: 57,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 39",
+        type: "Conceptual Analysis",
+        q: "In the Word Count diagram on Slide 39 ('Deer Bear River / Car Car River / Deer Car Bear'), why is the 'Shuffle' step indispensable before the 'Reduce' step can calculate the final total for 'Deer'?",
+        options: [
+          "Because 'Deer' appears in the first split ('Deer Bear River') and the third split ('Deer Car Bear'); Shuffle is required to bring both '(Deer, 1)' pairs together into one group so the Reducer can sum them to 'Deer, 2'.",
+          "Because Shuffle divides the original input text into three separate lines before Mapping begins.",
+          "Because Shuffle replicates the HDFS blocks onto empty server racks.",
+          "Because Reduce only accepts unstructured image files unless Shuffle converts them to SQL."
+        ],
+        ans: 0,
+        exp: "In Slide 39, 'Deer, 1' is emitted in the first Mapping box and the third Mapping box. Arrows in the Shuffling step bring both 'Deer, 1' pairs into a single box ('Deer, 1 / Deer, 1') so Reducing can sum them to 'Deer, 2'."
+      },
+      {
+        id: 58,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 40",
+        type: "Architectural Reasoning",
+        q: "What does YARN stand for, what are its main architectural components on Slide 40, and how does its responsibility differ from HDFS?",
+        options: [
+          "Yet Another Replication Node; consists of NameNode and DataNodes; it stores replicated file blocks.",
+          "Yet Another Resource Negotiator; consists of a ResourceManager and NodeManagers (NodeManager 1, 2, 3); YARN manages cluster resources while HDFS stores files.",
+          "Yielding Analytical Record Network; consists of Map and Reduce; it cleans GPS data.",
+          "Yet Another Relational Namespace; consists of Local Files and Cloud Storage; it replaces Spark."
+        ],
+        ans: 1,
+        exp: "Slide 40 states: 'YARN stands for (Yet Another Resource Negotiator)', shows 'ResourceManager → NodeManager 1, NodeManager 2, NodeManager 3', and notes: 'YARN manages cluster resources. HDFS stores files.'"
+      },
+      {
+        id: 59,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 41",
+        type: "Identify the FALSE Statement",
+        q: "Which of the following statements about Hadoop components and Apache Spark (Slide 41) is FALSE?",
+        options: [
+          "HDFS provides distributed storage, while YARN provides cluster resource management.",
+          "MapReduce is a distributed processing model introduced in the course through concepts and the Word Count example.",
+          "Apache Spark is used for data processing and analytics, with hands-on work in the course done using PySpark.",
+          "Apache Spark is tightly coupled to Hadoop and cannot run on any computer unless HDFS and YARN are installed first."
+        ],
+        ans: 3,
+        exp: "Slide 41 explicitly states at the bottom: 'Spark may use HDFS, but it does not require Hadoop to run.' Slide 44 also notes: 'No separate Hadoop installation is required for PySpark tasks.'"
+      },
+      {
+        id: 60,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 42",
+        type: "Scenario Analysis",
+        q: "A student runs a PySpark script on a laptop reading a local Parquet file, while a cloud data engineer runs an Apache Spark job reading distributed datasets from Amazon S3, Azure, and HDFS. Why do both workflows work seamlessly with Apache Spark?",
+        options: [
+          "Because Spark is a processing engine that can read data from several storage systems—including Local Files (CSV, JSON, Parquet), HDFS (distributed files), and Cloud Storage (Amazon S3 / Azure).",
+          "Because Spark is a distributed file storage system that automatically converts Amazon S3 buckets into metal server racks.",
+          "Because PySpark only works when local CSV files are first uploaded into a YARN ResourceManager.",
+          "Because Parquet, JSON, and CSV files can only be read in production clusters and never in local mode."
+        ],
+        ans: 0,
+        exp: "Slide 42 explains: 'Spark is a processing engine. It can read data from several storage systems: Local Files (CSV, JSON, Parquet), HDFS (Distributed files), Cloud Storage (Amazon S3 / Azure). In our course, PySpark processes local files. In production, Spark can read distributed/cloud data.'"
+      },
+      {
+        id: 61,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 43",
+        type: "Quantitative & Architectural",
+        q: "In Slide 43 ('Spark Local Mode — Parallel Processing'), a dataset of 1,000,000 records is divided into 4 equal partitions and processed using 'local[4]'. Which statement accurately describes what happens?",
+        options: [
+          "Four separate physical servers in a data center each process 1,000,000 rows over a network.",
+          "The 1,000,000 records are split into Partition 1, Partition 2, Partition 3, and Partition 4 (250,000 rows each), and Task 1 through Task 4 run concurrently (up to 4 tasks at once) on one computer.",
+          "One single task processes Partition 1 (250,000 rows) and discards the remaining 750,000 rows.",
+          "HDFS creates 4 backup copies of the 1,000,000 records across 4 DataNodes before running MapReduce."
+        ],
+        ans: 1,
+        exp: "Slide 43 shows 1,000,000 records divided into 4 partitions of 250,000 rows each (Task 1 to Task 4) and defines 'local[4]: Up to 4 tasks run concurrently on one computer.'"
+      },
+      {
+        id: 62,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 43",
+        type: "Quantitative Reasoning",
+        q: "Following the exact logic of Slide 43, if you have 2,000,000 records split evenly into 4 partitions and run Spark on your laptop with 'local[4]', how many rows are in each partition and how many tasks can execute concurrently on that one computer?",
+        options: [
+          "2,000,000 rows per partition; 1 task runs at a time across 4 computers.",
+          "250,000 rows per partition; 8 tasks run concurrently across 2 racks.",
+          "500,000 rows per partition; up to 4 tasks (Task 1 to Task 4) run concurrently on one computer.",
+          "100,000 rows per partition; 4 NameNodes process the metadata sequentially."
+        ],
+        ans: 2,
+        exp: "Dividing 2,000,000 records evenly into 4 partitions gives 500,000 rows per partition, and as Slide 43 states, 'local[4]' means 'Up to 4 tasks run concurrently on one computer.'"
+      },
+      {
+        id: 63,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slides 28, 34 & 43",
+        type: "Deep Comparison",
+        q: "How does parallel processing in Spark Local Mode ('local[4]' on Slide 43) compare conceptually to distributed cluster processing (Slides 28 & 34)?",
+        options: [
+          "Both divide a large dataset into smaller partitions/chunks processed in parallel by multiple tasks, but 'local[4]' runs up to 4 concurrent tasks on a single computer whereas a cluster distributes data and tasks across multiple networked machines.",
+          "Spark Local Mode requires hundreds of server racks, whereas distributed processing runs on a single smartphone.",
+          "Spark Local Mode cannot divide data into partitions, whereas distributed processing only works on 1,000,000 rows.",
+          "There is no difference: 'local[4]' means connecting 4 separate data centers over the internet."
+        ],
+        ans: 0,
+        exp: "Slides 28 & 34 show distributed processing across multiple worker machines/servers in a cluster, while Slide 43 shows how Spark Local Mode ('local[4]') applies parallel partitioning on a single computer ('Up to 4 tasks run concurrently on one computer')."
+      },
+      {
+        id: 64,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 44",
+        type: "Course Structure Analysis",
+        q: "According to Slide 44 ('What Will We Do in This Course?'), how is the curriculum divided between Hadoop and Spark?",
+        options: [
+          "Hadoop is used for hands-on PySpark DataFrames and Spark SQL, while Spark is only covered as a brief historical concept.",
+          "Students must install a multi-rack Hadoop and YARN cluster on their laptops before writing any Python code.",
+          "Both Hadoop and Spark are studied strictly as theoretical concepts without any hands-on coding.",
+          "Hadoop covers foundational concepts (HDFS storage, MapReduce idea, YARN resource management, short classroom demo), while Spark is hands-on (PySpark DataFrames, CSV/JSON/Parquet, Aggregations & Spark SQL, Partitions & Spark UI) with no separate Hadoop installation required."
+        ],
+        ans: 3,
+        exp: "Slide 44 lists 'Hadoop — Foundations' (HDFS storage, MapReduce idea, YARN resource management, Short classroom demonstration) and 'Spark — Hands-on' (PySpark DataFrames, CSV/JSON/Parquet, Aggregations and Spark SQL, Partitions and Spark UI), noting: 'No separate Hadoop installation is required for PySpark tasks.'"
+      },
+      {
+        id: 65,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slides 6 & 42 & 44",
+        type: "Conceptual Synthesis",
+        q: "In the hands-on Spark portion of the course, students process CSV, JSON, and Parquet files using PySpark DataFrames. Based on Slide 6, how do CSV and JSON differ in data structure?",
+        options: [
+          "CSV is Unstructured free text, whereas JSON is a Structured relational SQL table.",
+          "CSV is Structured data (organized in defined rows and columns), whereas JSON is Semi-Structured data (fields and nested records with no single fixed table).",
+          "Both CSV and JSON are Unstructured media formats identical to audio and satellite images.",
+          "CSV can only be stored in HDFS DataNodes, while JSON can only be stored in Amazon S3."
+        ],
+        ans: 1,
+        exp: "Slide 6 classifies CSV files under Structured ('Organized in defined rows and columns') and JSON under Semi-Structured ('Fields and nested records. No single fixed table'), while Slides 42 & 44 show PySpark reading CSV, JSON, and Parquet."
+      },
+      {
+        id: 66,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slides 36, 40, 41 & 45",
+        type: "Deep Comparison",
+        q: "If a company builds a full Big Data cluster using HDFS, YARN, and Apache Spark, what is the distinct role of each of these three technologies?",
+        options: [
+          "HDFS stores data across distributed DataNodes (with NameNode managing metadata), YARN manages and negotiates cluster resources (via ResourceManager and NodeManagers), and Spark acts as the processing and analytics engine.",
+          "HDFS processes data in memory, YARN stores replicated file blocks on disk, and Spark manages physical server racks.",
+          "HDFS negotiates CPU resources, YARN executes SQL queries, and Spark permanently replaces all hard drives.",
+          "All three are identical file storage systems created by Google to replace MongoDB."
+        ],
+        ans: 0,
+        exp: "Slides 36, 40, 41, and 45 establish the exact separation of roles: HDFS stores data (distributed storage), YARN manages cluster resources, and Spark processes/analyzes data."
+      },
+      {
+        id: 67,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slide 45",
+        type: "Identify the FALSE Statement",
+        q: "Based on the final Summary slide (Slide 45), which of the following synthesis statements is FALSE?",
+        options: [
+          "Big Data involves five key characteristics: volume, velocity, variety, veracity, and value.",
+          "The Big Data lifecycle progresses through five stages: Collect → Store → Process → Analyze → Value.",
+          "HDFS processes data and runs independently, whereas Spark is strictly a distributed disk storage system that cannot run without HDFS.",
+          "Data analysis supports real-world decisions such as route planning in Google Maps and hurricane forecasting."
+        ],
+        ans: 2,
+        exp: "Slide 45 states the exact opposite of C: 'HDFS stores data. Spark processes data and can run independently.'"
+      },
+      {
+        id: 68,
+        topic: "Case 1: Google Maps",
+        slide: "Slides 11–16 & 22–24",
+        type: "Cross-Slide Synthesis",
+        q: "Consider how Google Maps handles millions of GPS observations to estimate traffic and suggest routes. How does this system connect the Big Data Lifecycle (Slide 22), Data Quality/Veracity (Slide 14), and Analytical Processing (Slide 15 & 24)?",
+        options: [
+          "It relies on a single slow vehicle (10 km/h) to close highways without storing historical traffic data.",
+          "It treats 7,200 km/h readings as valid highway speeds and deletes all 90 km/h observations.",
+          "It uses an operational single-machine database with zero data validation to avoid distributed coordination costs.",
+          "It collects continuous GPS streams, stores relevant traffic history, validates Veracity during Processing (flagging impossible 7,200 km/h errors while checking nearby cars for 10 km/h slowdowns), and aggregates/analyzes the data to deliver route and ETA Value."
+        ],
+        ans: 3,
+        exp: "This synthesizes Slides 11–16 and 22: Collect (GPS/road observations) → Store (traffic history) → Process (validate speeds/Veracity & aggregate) → Analyze (estimate traffic/ETA) → Value (route suggestions)."
+      },
+      {
+        id: 69,
+        topic: "Case 2: Hurricane Michael",
+        slide: "Slides 17–22",
+        type: "Cross-Slide Synthesis",
+        q: "When comparing the Google Maps case study and the Hurricane Michael case study across the chapter, which architectural parallel is accurate?",
+        options: [
+          "Neither case study requires data quality control because satellite and GPS sensors never produce erroneous readings.",
+          "Both follow the Collect → Store → Process/Prepare → Analyze/Simulate → Value/Forecast progression, where contextual quality control (Veracity) is essential before estimating traffic or simulating storm tracks to support human decisions.",
+          "Both case studies prove that collecting raw data volume alone automatically generates accurate predictions without models or aggregation.",
+          "Google Maps only uses unstructured satellite imagery, whereas Hurricane Michael only uses structured online shopping clicks."
+        ],
+        ans: 1,
+        exp: "Slide 22 explicitly aligns Google Maps and Hurricane Michael across Collect, Process (Validate speeds / Check sensor readings), and Analyze (Estimate traffic / Simulate storm track) to produce Value (Support a decision)."
+      },
+      {
+        id: 70,
+        topic: "HDFS, MapReduce, YARN & Spark",
+        slide: "Slides 27–45",
+        type: "Comprehensive Chapter Synthesis",
+        q: "Why did the Big Data ecosystem evolve from a single central server (Slide 27) to distributed frameworks like Hadoop and Apache Spark (Slides 28–45)?",
+        options: [
+          "Because a single machine becomes a storage and processing bottleneck at scale; distributed systems overcome this by horizontally scaling across networked servers (storing replicated blocks in HDFS and running parallel tasks via MapReduce or Spark), while Spark also enables fast parallel processing on local files without requiring a Hadoop installation.",
+          "Because single servers cannot run Python code, requiring every laptop to be placed inside a metal server rack.",
+          "Because distributed processing eliminates all network communication and coordination costs between machines.",
+          "Because traditional databases can only store unstructured video files and cannot handle structured rows."
+        ],
+        ans: 0,
+        exp: "This captures the complete technical arc of Slides 27–45: overcoming the single-machine bottleneck through distributed storage (HDFS block replication and horizontal scaling across racks/servers) and parallel processing (MapReduce and independent Apache Spark engines)."
+      }
+    ];
+
+    let userAnswers = {};
+    let currentTopic = "ALL";
+    let currentStatus = "ALL";
+
+    function setTopic(topic, btn) {
+      currentTopic = topic;
+      document.querySelectorAll("#topicFilters .chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      renderQuestions();
+    }
+
+    function setStatus(status, btn) {
+      currentStatus = status;
+      document.querySelectorAll("#statusFilters .chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      renderQuestions();
+    }
+
+    function selectAnswer(qId, optIdx) {
+      if (userAnswers[qId] !== undefined) return;
+      userAnswers[qId] = optIdx;
+      updateStats();
+      renderQuestions();
+    }
+
+    function retryQuestion(qId) {
+      delete userAnswers[qId];
+      updateStats();
+      renderQuestions();
+    }
+
+    function resetAll() {
+      userAnswers = {};
+      updateStats();
+      renderQuestions();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateStats() {
+      const answeredIds = Object.keys(userAnswers);
+      let correct = 0;
+      let wrong = 0;
+      answeredIds.forEach(id => {
+        const q = questions.find(item => item.id === Number(id));
+        if (userAnswers[id] === q.ans) correct++;
+        else wrong++;
+      });
+      const totalAns = answeredIds.length;
+      const pct = totalAns > 0 ? Math.round((correct / totalAns) * 100) : 0;
+
+      document.getElementById("stat-progress").textContent = `Answered: ${totalAns} / ${questions.length}`;
+      document.getElementById("stat-correct").textContent = `Correct: ${correct}`;
+      document.getElementById("stat-wrong").textContent = `Wrong: ${wrong}`;
+      document.getElementById("stat-score").textContent = `Score: ${pct}%`;
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById("questionsContainer");
+      const query = document.getElementById("searchBox").value.trim().toLowerCase();
+      const letters = ["A", "B", "C", "D"];
+
+      const filtered = questions.filter(q => {
+        if (currentTopic !== "ALL" && q.topic !== currentTopic) return false;
+        if (currentStatus === "UNANSWERED" && userAnswers[q.id] !== undefined) return false;
+        if (currentStatus === "WRONG" && (userAnswers[q.id] === undefined || userAnswers[q.id] === q.ans)) return false;
+        if (currentStatus === "FALSE_STMT" && q.type !== "Identify the FALSE Statement") return false;
+        if (query) {
+          const hay = (q.q + " " + q.topic + " " + q.slide + " " + q.type + " " + q.options.join(" ")).toLowerCase();
+          if (!hay.includes(query)) return false;
+        }
+        return true;
+      });
+
+      container.innerHTML = filtered.map(q => {
+        const chosen = userAnswers[q.id];
+        const isAnswered = chosen !== undefined;
+        const isCorrect = isAnswered && chosen === q.ans;
+        const cardClass = isAnswered ? (isCorrect ? "q-card answered-correct" : "q-card answered-wrong") : "q-card";
+
+        const optsHtml = q.options.map((optText, idx) => {
+          let btnClass = "opt-btn";
+          if (isAnswered) {
+            if (idx === q.ans) btnClass += " correct-choice";
+            else if (idx === chosen && chosen !== q.ans) btnClass += " wrong-choice";
+          }
+          return `
+            <button class="${btnClass}" ${isAnswered ? "disabled" : ""} onclick="selectAnswer(${q.id}, ${idx})">
+              <span class="opt-letter">${letters[idx]}</span>
+              <span>${optText}</span>
+            </button>
+          `;
+        }).join("");
+
+        return `
+          <div class="${cardClass}" id="q-card-${q.id}">
+            <div class="q-meta">
+              <span class="badge">Q${q.id} of 70</span>
+              <span class="badge slide">${q.slide}</span>
+              <span class="badge">${q.topic}</span>
+              <span class="badge type">${q.type}</span>
+            </div>
+            <div class="q-text">${q.q}</div>
+            <div class="options-list">
+              ${optsHtml}
+            </div>
+            <div class="explanation-box ${isAnswered ? "visible" : ""}">
+              <div class="exp-header ${isCorrect ? "pass" : "fail"}">
+                <span>${isCorrect ? "✓ Correct! Deep Conceptual Match (Answer: " + letters[q.ans] + ")" : "✗ Incorrect — You chose " + (isAnswered ? letters[chosen] : "") + ", but the correct answer is " + letters[q.ans]}</span>
+                <button class="retry-mini" onclick="retryQuestion(${q.id})">Retry Question</button>
+              </div>
+              <div><strong>Conceptual Explanation (${q.slide}):</strong> ${q.exp}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function downloadHTML() {
+      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "big_data_part1_deep_exam_70.html";
+      a.click();
+    }
+
+    renderQuestions();
+  </script>
+</body>
+</html>
